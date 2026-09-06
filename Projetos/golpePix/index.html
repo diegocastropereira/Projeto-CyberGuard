@@ -1,13 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
-    <title>Início</title>
+    <title>Validação de Segurança - PIX</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <h1>teste pix</h1>
-    <a href="../../index.html">Voltar para o menu principal</a>
+    <div class="bank-card">
+        <!-- TELA 1: ISCA DO GOLPE -->
+        <div id="phishingStep">
+            <div class="bank-header">
+                <div class="pix-badge">PIX</div>
+                <h2>Confirmação de Transferência</h2>
+                <p>Identificamos um pagamento pendente de R$ 150,00. Informe suas credenciais bancárias para autorizar ou cancelar a transação.</p>
+            </div>
+
+            <form id="pixForm">
+                <div class="input-field">
+                    <label for="agency">Agência e Conta</label>
+                    <input type="text" id="agency" placeholder="0001 / 12345-6" required>
+                </div>
+
+                <div class="input-field">
+                    <label for="password">Senha de Acesso (4 ou 6 dígitos)</label>
+                    <input type="password" id="password" placeholder="••••••" required>
+                </div>
+
+                <button type="submit" class="btn-verify">Verificar Transação</button>
+            </form>
+        </div>
+
+        <!-- TELA 2: ALERTA DO CYBER GUARD -->
+        <div id="phishingAlert" class="hidden">
+            <div class="phish-banner">🚨 VOCÊ CAIU EM UM PHISHING!</div>
+            <h3>Projeto Cyber Guard</h3>
+            
+            <p class="phish-desc">
+                Páginas falsas de instituições financeiras são o meio mais comum para roubo de senhas bancárias e dados de acesso.
+            </p>
+
+            <div class="data-preview">
+                <p><strong>Agência/Conta inserida:</strong> <span id="displayAcc"></span></p>
+                <p><strong>Status:</strong> Capturado pelo invasor</p>
+            </div>
+
+            <div class="alert-tips">
+                <p><strong>Como identificar o golpe:</strong></p>
+                <ul>
+                    <li>Bancos raramente pedem senhas via links externos.</li>
+                    <li>Sempre confira a URL antes de digitar senhas.</li>
+                </ul>
+            </div>
+
+            <a href="../../index.html" class="btn-home">Voltar ao Menu Principal</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('pixForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            document.getElementById('displayAcc').innerText = document.getElementById('agency').value;
+            
+            document.getElementById('phishingStep').classList.add('hidden');
+            document.getElementById('phishingAlert').classList.remove('hidden');
+        });
+    </script>
 </body>
 </html>

