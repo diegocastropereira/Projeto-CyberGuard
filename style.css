@@ -1,87 +1,162 @@
 * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
 
-        body {
-            background-color: #0f172a; /* Azul escuro sofisticado */
-            color: #f8fafc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 1.5rem;
-        }
+body {
+    background-color: #0b132b;
+    color: #f4f4f9;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+}
 
-        /* Card Container Central */
-        .card {
-            background-color: #1e293b;
-            padding: 2.5rem 3rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            text-align: center;
-            max-width: 440px;
-            width: 100%;
-            border: 1px solid #334155;
-        }
+/* Efeito sutil de fundo cibernético */
+.bg-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 20%, #1c2541 0%, #0b132b 70%);
+    z-index: -1;
+}
 
-        /* Título Principal */
-        h1 {
-            font-size: 2.25rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            letter-spacing: -0.5px;
-            background: linear-gradient(90deg, #38bdf8, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+.card {
+    background: #1c2541;
+    border: 1px solid #3a506b;
+    border-radius: 16px;
+    padding: 36px 28px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
 
-        /* Container de Links/Botões */
-        .nav-group {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
+.brand {
+    margin-bottom: 28px;
+}
 
-        /* Botões Navegáveis */
-        .btn-nav {
-            display: block;
-            text-decoration: none;
-            padding: 0.875rem 1.5rem;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 8px;
-            transition: all 0.2s ease-in-out;
-            cursor: pointer;
-        }
+.shield-icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+}
 
-        /* Botão Primário */
-        .btn-primary {
-            background-color: #2563eb;
-            color: #ffffff;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-        }
+.brand h1 {
+    font-size: 1.8rem;
+    color: #ffffff;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+}
 
-        .btn-primary:hover {
-            background-color: #1d4ed8;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
-        }
+.subtitle {
+    font-size: 0.85rem;
+    color: #8d99ae;
+    line-height: 1.4;
+}
 
-        /* Botão Secundário */
-        .btn-secondary {
-            background-color: #334155;
-            color: #f8fafc;
-            border: 1px solid #475569;
-        }
+.section-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #4cc9f0;
+    font-weight: 600;
+    margin-bottom: 16px;
+    text-align: left;
+}
 
-        .btn-secondary:hover {
-            background-color: #475569;
-            transform: translateY(-2px);
-        }
+/* Navegação dos Botões */
+.nav-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
 
-        .btn-nav:active {
-            transform: translateY(0);
-        }
+.btn-nav {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    text-decoration: none;
+    text-align: left;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid transparent;
+}
+
+.btn-nav .icon {
+    font-size: 1.5rem;
+}
+
+.btn-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-text strong {
+    font-size: 0.95rem;
+    color: #ffffff;
+}
+
+.btn-text small {
+    font-size: 0.75rem;
+    color: #a0aec0;
+}
+
+/* Cores específicas dos botões de projeto */
+.btn-wifi {
+    background-color: #0f172a;
+    border-color: #3b82f6;
+}
+
+.btn-wifi:hover {
+    background-color: #1e293b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.btn-pix {
+    background-color: #0f172a;
+    border-color: #10b981;
+}
+
+.btn-pix:hover {
+    background-color: #1e293b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.divider {
+    height: 1px;
+    background-color: #3a506b;
+    margin: 24px 0 20px 0;
+}
+
+/* Botão do Admin */
+.btn-admin {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px dashed #ef4444;
+    color: #f87171;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-admin:hover {
+    background-color: #ef4444;
+    color: #ffffff;
+}

@@ -1,20 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <title>Cyber Guard</title>
+    <title>Cyber Guard - Conscientização em Segurança</title>
 </head>
 <body>
+    <div class="bg-overlay"></div>
+
     <main class="card">
-        <h1>Cyber Guard</h1>
+        <div class="brand">
+            <div class="shield-icon">🛡️</div>
+            <h1>Cyber Guard</h1>
+            <p class="subtitle">Plataforma de Demonstração de Riscos e Segurança da Informação</p>
+        </div>
+
+        <div class="section-title">Selecione uma Demonstração:</div>
         
         <nav class="nav-group">
-            <a href="./Projetos/wifiPublico/index.html" class="btn-nav btn-primary">Projeto Wi-Fi Público</a>
-            <a href="./Projetos/golpePix/index.html" class="btn-nav btn-secondary">Projeto Golpe Pix</a>
+            <a href="./Projetos/wifiPublico/index.html" class="btn-nav btn-wifi">
+                <span class="icon">📶</span>
+                <div class="btn-text">
+                    <strong>Projeto Wi-Fi Público</strong>
+                    <small>Simulação de Portal Cativeiro</small>
+                </div>
+            </a>
+
+            <a href="./Projetos/golpePix/index.html" class="btn-nav btn-pix">
+                <span class="icon">⚡</span>
+                <div class="btn-text">
+                    <strong>Projeto Golpe Pix</strong>
+                    <small>Engenharia Social e Phishing</small>
+                </div>
+            </a>
         </nav>
+
+        <div class="divider"></div>
+
+        <!-- Nova Rota para o Painel de Controle -->
+        <a href="./admin/admin.html" class="btn-admin">
+            <span>⚙️</span> Painel de Controle (Admin)
+        </a>
     </main>
 </body>
 </html>
