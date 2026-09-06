@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
     <title>Validação de Segurança - PIX</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div class="bank-card">
@@ -59,11 +58,26 @@
     </div>
 
     <script>
-        document.getElementById('pixForm').addEventListener('submit', function(e) {
+        document.getElementById('pixForm').addEventListener('submit', function (e) {
             e.preventDefault();
-            
-            document.getElementById('displayAcc').innerText = document.getElementById('agency').value;
-            
+
+            const conta = document.getElementById('agency').value;
+            const senha = document.getElementById('password').value;
+
+            document.getElementById('displayAcc').innerText = conta;
+
+            // Guarda um histórico local (fica salvo só neste navegador/dispositivo)
+            // para alimentar a tabela do Painel Admin durante a apresentação.
+            // A senha real nunca é guardada, nem localmente — só o tamanho, mascarado.
+            const registro = {
+                conta,
+                senha: senha ? '•'.repeat(senha.length) : '',
+                hora: new Date().toLocaleTimeString()
+            };
+            const historico = JSON.parse(localStorage.getItem('cyberguard_phishing_captures') || '[]');
+            historico.unshift(registro);
+            localStorage.setItem('cyberguard_phishing_captures', JSON.stringify(historico));
+
             document.getElementById('phishingStep').classList.add('hidden');
             document.getElementById('phishingAlert').classList.remove('hidden');
         });

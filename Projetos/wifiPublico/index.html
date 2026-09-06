@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
     <title>Wi-Fi Grátis - Libere seu Acesso</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div class="portal-card">
@@ -67,44 +66,29 @@
     </div>
 
     <script>
-        document.getElementById('wifiForm').addEventListener('submit', function(e) {
+        document.getElementById('wifiForm').addEventListener('submit', function (e) {
             e.preventDefault();
-            
-            // Captura os dados digitados
-            document.getElementById('outName').innerText = document.getElementById('fullName').value;
-            document.getElementById('outCpf').innerText = document.getElementById('cpf').value;
-            document.getElementById('outPhone').innerText = document.getElementById('phone').value;
+
+            const nome = document.getElementById('fullName').value;
+            const cpf = document.getElementById('cpf').value;
+            const telefone = document.getElementById('phone').value;
+
+            // Exibe os dados capturados nesta tela, só para efeito da simulação
+            document.getElementById('outName').innerText = nome;
+            document.getElementById('outCpf').innerText = cpf;
+            document.getElementById('outPhone').innerText = telefone;
+
+            // Guarda um histórico local (fica salvo só neste navegador/dispositivo)
+            // para alimentar a tabela do Painel Admin durante a apresentação
+            const registro = { nome, cpf, telefone, hora: new Date().toLocaleTimeString() };
+            const historico = JSON.parse(localStorage.getItem('cyberguard_wifi_captures') || '[]');
+            historico.unshift(registro);
+            localStorage.setItem('cyberguard_wifi_captures', JSON.stringify(historico));
 
             // Troca de tela
             document.getElementById('wifiStep').classList.add('hidden');
             document.getElementById('alertStep').classList.remove('hidden');
         });
     </script>
-    <script>
-  // Inicialize com as chaves do seu painel do Supabase
-        const SUPABASE_URL = 'sb_publishable_5Zr5l-XsNbW6FIq2T0092Q_oojhzxIj';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1dWtjeW5qcWd5enVvZHlibWhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2ODU5OTUsImV4cCI6MjEwNDI2MTk5NX0.ugaf1O3w-UcLtrgMkITcyWrcBRhKc8Y94Gp5_PSF2YM';
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  document.getElementById('wifiForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-
-      const nome = document.getElementById('fullName').value;
-      const cpf = document.getElementById('cpf').value;
-      const telefone = document.getElementById('phone').value;
-
-      // Envia direto do navegador para o banco do Supabase
-      await supabase
-          .from('wifi_captures')
-          .insert([{ nome: nome, cpf: cpf, telefone: telefone }]);
-
-      document.getElementById('outName').innerText = nome;
-      document.getElementById('outCpf').innerText = cpf;
-      document.getElementById('outPhone').innerText = telefone;
-
-      document.getElementById('wifiStep').classList.add('hidden');
-      document.getElementById('alertStep').classList.remove('hidden');
-  });
-</script>
 </body>
 </html>
