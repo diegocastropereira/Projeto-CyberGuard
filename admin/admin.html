@@ -3,16 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="../assets/logo.jpeg">
-    <title>Cyber Guard - Painel ao Vivo</title>
+    <!-- Título da página alterado para refletir a nova identidade -->
+    <title>CyberGuard - Painel ao Vivo</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
         body { background: #0f172a; color: #fff; padding: 20px; }
-        h1 { text-align: center; color: #38bdf8; margin-bottom: 8px; }
-        .aviso { text-align: center; color: #94a3b8; font-size: 0.8rem; margin-bottom: 15px; }
         
-        /* Estilos para os novos botões */
-        .controls { text-align: center; margin-bottom: 25px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        /* Estilos do Header com o novo Logo Integrado */
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Estilo para o contêiner do novo logotipo SVG */
+        .logo-container {
+            width: 150px; /* Tamanho ajustável do logo */
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        /* O SVG é configurado para preencher o contêiner */
+        .logo-container svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        h1 { color: #38bdf8; margin-bottom: 8px; font-size: 1.8rem; }
+        .aviso { color: #94a3b8; font-size: 0.8rem; margin-bottom: 15px; }
+        
+        /* Estilos para os botões (inalterados) */
+        .controls { margin-bottom: 25px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
         .btn { padding: 8px 14px; border: none; border-radius: 6px; font-size: 0.85rem; font-weight: bold; cursor: pointer; transition: background 0.2s; }
         .btn-danger { background: #ef4444; color: white; }
         .btn-danger:hover { background: #dc2626; }
@@ -28,10 +51,31 @@
 </head>
 <body>
 
-    <h1>🛡️ CYBERGUARD - DADOS INTERCEPTADOS EM TEMPO REAL</h1>
-    <p class="aviso">Dados visíveis apenas neste navegador, durante esta demonstração — nada é enviado a um servidor.</p>
+    <header>
+        <!-- O LOGOTIPO INTEGRADO NOVO -->
+        <div class="logo-container">
+            <!-- Substituímos a tag <img> por um SVG complexo que inclui o texto "CyberGuard" -->
+            <!-- A cor é definida pelo fill="#0f3463" dentro do SVG -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 200">
+                <!-- Primeiro, o monograma G original, posicionado à esquerda -->
+                <g transform="translate(0, 0) scale(0.6)" fill="#0f3463">
+                    <path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm0 448C138.7 456 56 367.3 56 256S138.7 56 248 56s192 88.7 192 192-88.7 192-192 192z"/>
+                    <path d="M336 192h-88c-26.5 0-48 21.5-48 48v48c0 26.5 21.5 48 48 48h48c26.5 0 48-21.5 48-48v-24h-48v24h-48v-48h88v48c0 53-43 96-96 96s-96-43-96-96v-48c0-53 43-96 96-96h88v48z"/>
+                </g>
+                
+                <!-- Em seguida, o texto "CyberGuard", posicionado à direita do 'G' -->
+                <g transform="translate(180, 80)" font-family="Helvetica, Arial, sans-serif" font-weight="bold" font-size="50" fill="#0f3463">
+                    <text x="0" y="40">Cyber</text>
+                    <text x="0" y="95">Guard</text>
+                </g>
+            </svg>
+        </div>
+        <!-- Fim do Logo Integrado -->
 
-    <!-- Controles de exclusão e restauração -->
+        <h1>CYBERGUARD - DADOS INTERCEPTADOS EM TEMPO REAL</h1>
+        <p class="aviso">Dados visíveis apenas neste navegador, durante esta demonstração — nada é enviado a um servidor.</p>
+    </header>
+
     <div class="controls">
         <button class="btn btn-danger" onclick="limparDados()">🗑️ Limpar Todos os Dados</button>
         <button class="btn btn-secondary" onclick="desfazerLimpezaTotal()">↩️ Desfazer Limpeza Completa</button>
@@ -61,7 +105,6 @@
     </div>
 
     <script>
-        // Pilhas de backup para os botões de desfazer
         let backupTotalWifi = [];
         let backupTotalPhishing = [];
         let historicoRemovidosWifi = [];
@@ -88,22 +131,16 @@
             `).join('');
         }
 
-        // 1. Limpa todos os dados salvos e guarda backup para desfazer a limpeza total
         function limparDados() {
             backupTotalWifi = JSON.parse(localStorage.getItem('cyberguard_wifi_captures') || '[]');
             backupTotalPhishing = JSON.parse(localStorage.getItem('cyberguard_phishing_captures') || '[]');
-            
             localStorage.removeItem('cyberguard_wifi_captures');
             localStorage.removeItem('cyberguard_phishing_captures');
-            
-            // Limpa também o histórico de 1 a 1 para evitar conflitos
             historicoRemovidosWifi = [];
             historicoRemovidosPhishing = [];
-
             carregarDados();
         }
 
-        // 2. Desfaz a limpeza completa restaurando o que foi apagado por último
         function desfazerLimpezaTotal() {
             if (backupTotalWifi.length > 0 || backupTotalPhishing.length > 0) {
                 localStorage.setItem('cyberguard_wifi_captures', JSON.stringify(backupTotalWifi));
@@ -112,35 +149,18 @@
             }
         }
 
-        // 3. Remove e guarda apenas o último item de cada tabela (1 por vez) e permite reverter
         function desfazerUltimoItem() {
             const wifi = JSON.parse(localStorage.getItem('cyberguard_wifi_captures') || '[]');
             const phishing = JSON.parse(localStorage.getItem('cyberguard_phishing_captures') || '[]');
-
             let houveModificacao = false;
-
-            // Se houver itens na pilha de 1 a 1, significa que queremos RESTAURAR o que foi removido por último
             if (historicoRemovidosWifi.length > 0 || historicoRemovidosPhishing.length > 0) {
-                if (historicoRemovidosWifi.length > 0) {
-                    wifi.push(historicoRemovidosWifi.pop());
-                }
-                if (historicoRemovidosPhishing.length > 0) {
-                    phishing.push(historicoRemovidosPhishing.pop());
-                }
+                if (historicoRemovidosWifi.length > 0) { wifi.push(historicoRemovidosWifi.pop()); }
+                if (historicoRemovidosPhishing.length > 0) { phishing.push(historicoRemovidosPhishing.pop()); }
                 houveModificacao = true;
-            } 
-            // Caso contrário, removemos o último item atual das tabelas e guardamos no histórico para poder desfazer
-            else {
-                if (wifi.length > 0) {
-                    historicoRemovidosWifi.push(wifi.pop());
-                    houveModificacao = true;
-                }
-                if (phishing.length > 0) {
-                    historicoRemovidosPhishing.push(phishing.pop());
-                    houveModificacao = true;
-                }
+            } else {
+                if (wifi.length > 0) { historicoRemovidosWifi.push(wifi.pop()); houveModificacao = true; }
+                if (phishing.length > 0) { historicoRemovidosPhishing.push(phishing.pop()); houveModificacao = true; }
             }
-
             if (houveModificacao) {
                 localStorage.setItem('cyberguard_wifi_captures', JSON.stringify(wifi));
                 localStorage.setItem('cyberguard_phishing_captures', JSON.stringify(phishing));
@@ -148,7 +168,6 @@
             }
         }
 
-        // Atualiza os dados na tela a cada 2 segundos
         setInterval(carregarDados, 2000);
         carregarDados();
     </script>
