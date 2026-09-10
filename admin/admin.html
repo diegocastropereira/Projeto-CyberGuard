@@ -9,7 +9,16 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
         body { background: #0f172a; color: #fff; padding: 20px; }
         h1 { text-align: center; color: #38bdf8; margin-bottom: 8px; }
-        .aviso { text-align: center; color: #94a3b8; font-size: 0.8rem; margin-bottom: 20px; }
+        .aviso { text-align: center; color: #94a3b8; font-size: 0.8rem; margin-bottom: 15px; }
+        
+        /* Estilos para os novos botões */
+        .controls { text-align: center; margin-bottom: 25px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .btn { padding: 8px 14px; border: none; border-radius: 6px; font-size: 0.85rem; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-danger:hover { background: #dc2626; }
+        .btn-secondary { background: #475569; color: white; }
+        .btn-secondary:hover { background: #334155; }
+
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1200px; margin: 0 auto; }
         .box { background: #1e293b; padding: 15px; border-radius: 8px; border: 1px solid #334155; }
         table { width: 100%; margin-top: 10px; border-collapse: collapse; }
@@ -21,6 +30,13 @@
 
     <h1>🛡️ CYBERGUARD - DADOS INTERCEPTADOS EM TEMPO REAL</h1>
     <p class="aviso">Dados visíveis apenas neste navegador, durante esta demonstração — nada é enviado a um servidor.</p>
+
+    <!-- Controles de exclusão e restauração -->
+    <div class="controls">
+        <button class="btn btn-danger" onclick="limparDados()">🗑️ Limpar Todos os Dados</button>
+        <button class="btn btn-secondary" onclick="desfazerLimpezaTotal()">↩️ Desfazer Limpeza Completa</button>
+        <button class="btn btn-secondary" onclick="desfazerUltimoItem()">↪️ Desfazer 1 por Vez</button>
+    </div>
 
     <div class="grid">
         <div class="box">
@@ -45,6 +61,12 @@
     </div>
 
     <script>
+        // Pilhas de backup para os botões de desfazer
+        let backupTotalWifi = [];
+        let backupTotalPhishing = [];
+        let historicoRemovidosWifi = [];
+        let historicoRemovidosPhishing = [];
+
         function carregarDados() {
             const wifi = JSON.parse(localStorage.getItem('cyberguard_wifi_captures') || '[]');
             document.getElementById('wifiRows').innerHTML = wifi.map(r => `
@@ -64,6 +86,66 @@
                     <td style="color:#ef4444; font-weight:bold;">${r.senha}</td>
                 </tr>
             `).join('');
+        }
+
+        // 1. Limpa todos os dados salvos e guarda backup para desfazer a limpeza total
+        function limparDados() {
+            backupTotalWifi = JSON.parse(localStorage.getItem('cyberguard_wifi_captures') || '[]');
+            backupTotalPhishing = JSON.parse(localStorage.getItem('cyberguard_phishing_captures') || '[]');
+            
+            localStorage.removeItem('cyberguard_wifi_captures');
+            localStorage.removeItem('cyberguard_phishing_captures');
+            
+            // Limpa também o histórico de 1 a 1 para evitar conflitos
+            historicoRemovidosWifi = [];
+            historicoRemovidosPhishing = [];
+
+            carregarDados();
+        }
+
+        // 2. Desfaz a limpeza completa restaurando o que foi apagado por último
+        function desfazerLimpezaTotal() {
+            if (backupTotalWifi.length > 0 || backupTotalPhishing.length > 0) {
+                localStorage.setItem('cyberguard_wifi_captures', JSON.stringify(backupTotalWifi));
+                localStorage.setItem('cyberguard_phishing_captures', JSON.stringify(backupTotalPhishing));
+                carregarDados();
+            }
+        }
+
+        // 3. Remove e guarda apenas o último item de cada tabela (1 por vez) e permite reverter
+        function desfazerUltimoItem() {
+            const wifi = JSON.parse(localStorage.getItem('cyberguard_wifi_captures') || '[]');
+            const phishing = JSON.parse(localStorage.getItem('cyberguard_phishing_captures') || '[]');
+
+            let houveModificacao = false;
+
+            // Se houver itens na pilha de 1 a 1, significa que queremos RESTAURAR o que foi removido por último
+            if (historicoRemovidosWifi.length > 0 || historicoRemovidosPhishing.length > 0) {
+                if (historicoRemovidosWifi.length > 0) {
+                    wifi.push(historicoRemovidosWifi.pop());
+                }
+                if (historicoRemovidosPhishing.length > 0) {
+                    phishing.push(historicoRemovidosPhishing.pop());
+                }
+                houveModificacao = true;
+            } 
+            // Caso contrário, removemos o último item atual das tabelas e guardamos no histórico para poder desfazer
+            else {
+                if (wifi.length > 0) {
+                    historicoRemovidosWifi.push(wifi.pop());
+                    houveModificacao = true;
+                }
+                if (phishing.length > 0) {
+                    historicoRemovidosPhishing.push(phishing.pop());
+                    houveModificacao = true;
+                }
+            }
+
+            if (houveModificacao) {
+                localStorage.setItem('cyberguard_wifi_captures', JSON.stringify(wifi));
+                localStorage.setItem('cyberguard_phishing_captures', JSON.stringify(phishing));
+                carregarDados();
+            }
         }
 
         // Atualiza os dados na tela a cada 2 segundos
